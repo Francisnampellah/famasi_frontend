@@ -1,5 +1,8 @@
 FROM node:18-alpine AS base
 
+# Install curl
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 # Install dependencies
