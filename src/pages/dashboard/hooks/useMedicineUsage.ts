@@ -9,7 +9,7 @@ export const useMedicineUsage = () => {
   const fetchMedicineUsage = async (medicineName: string) => {
     try {
       setIsLoadingUsage(true)
-      const client = new InferenceClient(process.env.NEXT_PUBLIC_HUGGINGFACE_TOKEN || "")
+      const client = new InferenceClient(process.env.NEXT_PUBLIC_HUGGINGFACE_TOKEN || "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")
       
       const chatCompletion = await client.chatCompletion({
         provider: "novita",
