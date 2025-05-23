@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Medicine } from "@/type"
 import { useSell } from "../hooks/useMedicineSell"
-import { InferenceClient } from "@huggingface/inference"
+import { useMedicineUsage } from "../hooks/useMedicineUsage"
 
 interface SellModalProps {
   isOpen: boolean
@@ -17,35 +17,8 @@ interface SellModalProps {
 export const SellModal = ({ isOpen, onClose, medicine, onSubmit }: SellModalProps) => {
   const [quantity, setQuantity] = useState("")
   const [price, setPrice] = useState<number>(0)
-  const [medicineUsage, setMedicineUsage] = useState<string>("")
-  const [isLoadingUsage, setIsLoadingUsage] = useState(false)
-
-  const {handleSell} = useSell()
-
-  const fetchMedicineUsage = async () => {
-    try {
-      setIsLoadingUsage(true)
-      const client = new InferenceClient("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")
-      
-      const chatCompletion = await client.chatCompletion({
-        provider: "novita",
-        model: "deepseek-ai/DeepSeek-V3-0324",
-        messages: [
-          {
-            role: "user",
-            content: `What are the common uses and dosage instructions for ${medicine.name}? Please provide a brief summary.`,
-          },
-        ],
-      })
-
-      setMedicineUsage(chatCompletion.choices[0].message.content)
-    } catch (error) {
-      console.error("Error fetching medicine usage:", error)
-      setMedicineUsage("Unable to fetch medicine usage information.")
-    } finally {
-      setIsLoadingUsage(false)
-    }
-  }
+  const { handleSell } = useSell()
+  const { medicineUsage, isLoadingUsage, fetchMedicineUsage } = useMedicineUsage()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -83,7 +56,7 @@ export const SellModal = ({ isOpen, onClose, medicine, onSubmit }: SellModalProp
             <Button 
               type="button" 
               variant="outline" 
-              onClick={fetchMedicineUsage}
+              onClick={() => fetchMedicineUsage(medicine.name)}
               disabled={isLoadingUsage}
               className="w-full mb-4 sticky top-0 bg-background z-10"
             >
