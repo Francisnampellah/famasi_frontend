@@ -8,10 +8,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -23,6 +19,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useState, useEffect } from "react"
 import { Medicine } from "../../../type"
 import { Download } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 interface AddMedicineDialogProps {
   open: boolean
@@ -208,180 +212,192 @@ export function AddMedicineDialog({ open, onOpenChange, onSubmit, medicine }: Ad
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] space-y-6">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{medicine ? "Update Medicine" : "Add New Medicine"}</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            {medicine ? "Update the medicine details." : "Choose how you want to add medicines."}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <Tabs defaultValue={medicine ? "single" : "bulk"} className="w-full space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="single">Single Item</TabsTrigger>
-            <TabsTrigger value="bulk" disabled={!!medicine}>Bulk Upload</TabsTrigger>
+      <DialogContent className="sm:max-w-[600px]">
+        <Tabs defaultValue={medicine ? "single" : "bulk"} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-4 gap-2 bg-gray-700">
+            <TabsTrigger value="single" className="data-[state=active]:bg-white data-[state=inactive]:bg-gray-700 data-[state=active]:text-foreground outline-none">
+              Single Item
+            </TabsTrigger>
+            <TabsTrigger value="bulk" disabled={!!medicine} className="data-[state=active]:bg-white data-[state=inactive]:bg-gray-700 data-[state=active]:text-foreground outline-none">
+              Bulk Upload
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="single" className="space-y-6">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Medicine Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter medicine name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <TabsContent value="single" className="mt-0">
+            <Card className="h-[600px] flex flex-col">
+              <CardHeader>
+                <CardTitle>{medicine ? "Update Medicine" : "Add New Medicine"}</CardTitle>
+                <CardDescription>
+                  {medicine ? "Update the medicine details." : "Fill in the medicine details below."}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1 overflow-y-auto">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Medicine Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter medicine name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name="dosage"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Dosage</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter dosage (e.g., 500mg)" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      control={form.control}
+                      name="dosage"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Dosage</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter dosage (e.g., 500mg)" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="manufacturer"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Manufacturer</FormLabel>
-                        <FormControl>
-                          <CreatableSelect
-                            isClearable
-                            options={manufacturerOptions}
-                            styles={selectStyles}
-                            placeholder="Select or create manufacturer"
-                            value={manufacturerOptions.find((option) => option.value === field.value) || null}
-                            onChange={(newValue) => field.onChange(newValue ? newValue.value : "")}
-                            onCreateOption={handleCreateManufacturer}
-                            formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="manufacturer"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Manufacturer</FormLabel>
+                            <FormControl>
+                              <CreatableSelect
+                                isClearable
+                                options={manufacturerOptions}
+                                styles={selectStyles}
+                                placeholder="Select or create manufacturer"
+                                value={manufacturerOptions.find((option) => option.value === field.value) || null}
+                                onChange={(newValue) => field.onChange(newValue ? newValue.value : "")}
+                                onCreateOption={handleCreateManufacturer}
+                                formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Category</FormLabel>
-                        <FormControl>
-                          <CreatableSelect
-                            isClearable
-                            options={categoryOptions}
-                            styles={selectStyles}
-                            placeholder="Select or create category"
-                            value={categoryOptions.find((option) => option.value === field.value) || null}
-                            onChange={(newValue) => field.onChange(newValue ? newValue.value : "")}
-                            onCreateOption={handleCreateCategory}
-                            formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                      <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Category</FormLabel>
+                            <FormControl>
+                              <CreatableSelect
+                                isClearable
+                                options={categoryOptions}
+                                styles={selectStyles}
+                                placeholder="Select or create category"
+                                value={categoryOptions.find((option) => option.value === field.value) || null}
+                                onChange={(newValue) => field.onChange(newValue ? newValue.value : "")}
+                                onCreateOption={handleCreateCategory}
+                                formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="unit"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Unit</FormLabel>
-                        <FormControl>
-                          <CreatableSelect
-                            isClearable
-                            options={unitOptions}
-                            styles={selectStyles}
-                            placeholder="Select or create unit"
-                            value={unitOptions.find((option) => option.value === field.value) || null}
-                            onChange={(newValue) => field.onChange(newValue ? newValue.value : "")}
-                            onCreateOption={handleCreateUnit}
-                            formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="unit"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Unit</FormLabel>
+                            <FormControl>
+                              <CreatableSelect
+                                isClearable
+                                options={unitOptions}
+                                styles={selectStyles}
+                                placeholder="Select or create unit"
+                                value={unitOptions.find((option) => option.value === field.value) || null}
+                                onChange={(newValue) => field.onChange(newValue ? newValue.value : "")}
+                                onCreateOption={handleCreateUnit}
+                                formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="sellPrice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Selling Price</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="0.00"
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e.target.valueAsNumber || e.target.value)
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                      <FormField
+                        control={form.control}
+                        name="sellPrice"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Selling Price</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                placeholder="0.00"
+                                {...field}
+                                onChange={(e) => {
+                                  field.onChange(e.target.valueAsNumber || e.target.value)
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <FormField
-                  control={form.control}
-                  name="quantity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Initial Stock Quantity</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" placeholder="0" {...field} />
-                      </FormControl>
-                      <FormDescription>Enter the initial quantity in stock</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <DialogFooter className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">{medicine ? "Update Medicine" : "Save Medicine"}</Button>
-                </DialogFooter>
-              </form>
-            </Form>
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Initial Stock Quantity</FormLabel>
+                          <FormControl>
+                            <Input type="number" min="0" placeholder="0" {...field} />
+                          </FormControl>
+                          <FormDescription>Enter the initial quantity in stock</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <CardFooter className="flex justify-end space-x-2 border-t pt-4">
+                      <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                        Cancel
+                      </Button>
+                      <Button type="submit">{medicine ? "Update Medicine" : "Save Medicine"}</Button>
+                    </CardFooter>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="bulk" className="space-y-6">
-            <div className="flex flex-col space-y-6">
-              <div className="flex flex-col gap-4">
+          <TabsContent value="bulk" className="mt-0">
+            <Card className="h-[600px] flex flex-col">
+              <CardHeader>
+                <CardTitle>Bulk Upload Medicines</CardTitle>
+                <CardDescription>
+                  Upload multiple medicines at once using our template.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-center items-center space-y-4">
                 <Button variant="outline" onClick={handleDownloadTemplate} className="flex items-center gap-2">
                   <Download className="h-4 w-4" />
                   Download Template
                 </Button>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full max-w-md">
                   <input
                     type="file"
                     accept=".xlsx"
@@ -401,8 +417,8 @@ export function AddMedicineDialog({ open, onOpenChange, onSubmit, medicine }: Ad
                     Selected file: {selectedFile.name}
                   </p>
                 )}
-              </div>
-              <DialogFooter className="flex justify-end space-x-2">
+              </CardContent>
+              <CardFooter className="flex justify-end space-x-2 border-t pt-4">
                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                   Cancel
                 </Button>
@@ -413,8 +429,8 @@ export function AddMedicineDialog({ open, onOpenChange, onSubmit, medicine }: Ad
                 >
                   Upload Medicines
                 </Button>
-              </DialogFooter>
-            </div>
+              </CardFooter>
+            </Card>
           </TabsContent>
         </Tabs>
       </DialogContent>
