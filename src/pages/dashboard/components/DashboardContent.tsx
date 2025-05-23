@@ -1,9 +1,20 @@
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+"use client"
+
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Progress } from "@/components/ui/progress"
 import { useDashboard } from "../hooks/useDashboard"
 import { formatCurrency } from "../../../utils/formatCurrency"
-import StatisticsCard from '@/components/ui/StatisticsCard'
+import { 
+  TrendingUp, 
+  AlertTriangle, 
+  AlertCircle, 
+  DollarSign, 
+  ShoppingCart, 
+  Package, 
+  CreditCard 
+} from "lucide-react"
 
 export const DashboardContent = () => {
   const {
@@ -18,164 +29,117 @@ export const DashboardContent = () => {
   } = useDashboard()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    )
   }
 
   if (isError) {
-    return <div>Error loading dashboard data</div>
+    return (
+      <div className="flex items-center justify-center min-h-[400px] text-red-500">
+        <p>Error loading dashboard data</p>
+      </div>
+    )
+  }
+
+  const calculateProgress = (value: number, total: number) => {
+    return (value / total) * 100
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6   dark:bg-gray-900">
       {/* KPI Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="transform transition-all hover:-translate-y-1 hover:shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Success Card */}
+        <Card className="border-green-200 dark:border-green-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Total Revenue</CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-gray-500"
-            >
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
+            <div className="flex items-center space-x-2">
+              <DollarSign className="h-5 w-5 text-green-500" />
+              <CardTitle className="text-lg font-medium">Total Revenue</CardTitle>
+            </div>
+            <TrendingUp className="h-5 w-5 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalRevenue)}</div>
-            <p className="text-xs text-green-500">Total revenue from sales</p>
+            <div className="text-2xl font-bold text-green-500">{formatCurrency(totalRevenue)}</div>
+            <Progress 
+              value={calculateProgress(totalRevenue, totalRevenue * 1.2)} 
+              className="h-2 mt-2 bg-green-100 dark:bg-green-900"
+            />
+            <p className="text-xs text-muted-foreground mt-2">
+              <span className="text-green-500 font-medium">+12.5%</span> from last month
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="transform transition-all hover:-translate-y-1 hover:shadow-lg">
+        {/* Warning Card */}
+        <Card className="border-yellow-200 dark:border-yellow-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Total Sales</CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-gray-500"
-            >
-              <rect width="20" height="14" x="2" y="5" rx="2" />
-              <path d="M2 10h20" />
-            </svg>
+            <div className="flex items-center space-x-2">
+              <ShoppingCart className="h-5 w-5 text-yellow-500" />
+              <CardTitle className="text-lg font-medium">Total Sales</CardTitle>
+            </div>
+            <AlertTriangle className="h-5 w-5 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalSales}</div>
-            <p className="text-xs text-green-500">Total number of sales</p>
+            <div className="text-2xl font-bold text-yellow-500">{totalSales}</div>
+            <Progress 
+              value={calculateProgress(totalSales, totalSales * 1.3)} 
+              className="h-2 mt-2 bg-yellow-100 dark:bg-yellow-900"
+            />
+            <p className="text-xs text-muted-foreground mt-2">
+              <span className="text-yellow-500 font-medium">+8.1%</span> from last month
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="transform transition-all hover:-translate-y-1 hover:shadow-lg">
+        {/* Critical Card */}
+        <Card className="border-red-200 dark:border-red-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Inventory Value</CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-gray-500"
-            >
-              <path d="M20 7h-3a2 2 0 0 1-2-2V2" />
-              <path d="M9 2v3a2 2 0 0 1-2 2H4" />
-              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
-            </svg>
+            <div className="flex items-center space-x-2">
+              <Package className="h-5 w-5 text-red-500" />
+              <CardTitle className="text-lg font-medium">Inventory Value</CardTitle>
+            </div>
+            <AlertCircle className="h-5 w-5 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalInventory)}</div>
-            <p className="text-xs text-green-500">Current inventory value</p>
+            <div className="text-2xl font-bold text-red-500">{formatCurrency(totalInventory)}</div>
+            <Progress 
+              value={calculateProgress(totalInventory, totalInventory * 1.4)} 
+              className="h-2 mt-2 bg-red-100 dark:bg-red-900"
+            />
+            <p className="text-xs text-muted-foreground mt-2">
+              <span className="text-red-500 font-medium">-5.2%</span> from last month
+            </p>
           </CardContent>
         </Card>
-
-        <Card className="transform transition-all hover:-translate-y-1 hover:shadow-lg">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Total Purchases</CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-gray-500"
-            >
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalPurchases)}</div>
-            <p className="text-xs text-green-500">Total purchase value</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Cash Flow Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-        <StatisticsCard
-          title="Net Profit"
-          value={formatCurrency(totalRevenue - totalPurchases) + ' Tsh'}
-          percentage={totalRevenue - totalPurchases >= 0 ? '+12.5% from last month' : '-12.5% from last month'}
-          percentageColor={totalRevenue - totalPurchases >= 0 ? 'text-green-500' : 'text-red-500'}
-          chartData={[
-            { name: 'Mon', value: 1200 },
-            { name: 'Tue', value: 1300 },
-            { name: 'Wed', value: 1100 },
-            { name: 'Thu', value: 1400 },
-            { name: 'Fri', value: 1500 },
-            { name: 'Sat', value: 1700 },
-            { name: 'Sun', value: 1800 },
-          ]}
-          chartType="line"
-          chartColor="#000"
-          valueColor="text-black"
-        />
-        <StatisticsCard
-          title="Available Cash"
-          value={formatCurrency(totalRevenue - totalPurchases) + ' Tsh'}
-          percentage={totalRevenue - totalPurchases >= 0 ? '+8.1% from last month' : '-8.1% from last month'}
-          percentageColor={totalRevenue - totalPurchases >= 0 ? 'text-green-500' : 'text-red-500'}
-          chartData={[
-            { name: 'Mon', value: 900 },
-            { name: 'Tue', value: 950 },
-            { name: 'Wed', value: 1000 },
-            { name: 'Thu', value: 1100 },
-            { name: 'Fri', value: 1200 },
-            { name: 'Sat', value: 1300 },
-            { name: 'Sun', value: 1400 },
-          ]}
-          chartType="bar"
-          chartColor="#000"
-          valueColor="text-black"
-        />
       </div>
 
       {/* Main Content */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Chart */}
-        <Card className="col-span-2 md:col-span-1">
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-            <CardDescription>Monthly revenue</CardDescription>
+        <Card className="shadow-lg dark:bg-gray-800">
+          <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center space-x-2">
+              <CreditCard className="h-5 w-5 text-blue-500" />
+              <div>
+                <CardTitle>Revenue Overview</CardTitle>
+                <CardDescription>Monthly revenue analysis</CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyRevenue}>
-                  <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="#888888" 
+                    fontSize={12} 
+                    tickLine={false} 
+                    axisLine={false}
+                  />
                   <YAxis
                     stroke="#888888"
                     fontSize={12}
@@ -183,7 +147,24 @@ export const DashboardContent = () => {
                     axisLine={false}
                     tickFormatter={(value) => formatCurrency(value)}
                   />
-                  <Bar dataKey="total" fill="#4f46e5" radius={[4, 4, 0, 0]} className="fill-primary" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'white',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
+                  <Bar 
+                    dataKey="total" 
+                    fill="url(#colorGradient)" 
+                    radius={[4, 4, 0, 0]} 
+                  />
+                  <defs>
+                    <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.2}/>
+                    </linearGradient>
+                  </defs>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -191,24 +172,38 @@ export const DashboardContent = () => {
         </Card>
 
         {/* Recent Sales */}
-        <Card className="col-span-2 md:col-span-1">
-          <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>Latest transactions</CardDescription>
+        <Card className="shadow-lg dark:bg-gray-800">
+          <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center space-x-2">
+              <ShoppingCart className="h-5 w-5 text-blue-500" />
+              <div>
+                <CardTitle>Recent Sales</CardTitle>
+                <CardDescription>Latest transactions</CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
+          <CardContent className="pt-6">
+            <div className="space-y-4">
               {recentSells.map((sale) => (
-                <div key={sale.id} className="flex items-center">
-                  <Avatar className="h-9 w-9">
+                <div 
+                  key={sale.id} 
+                  className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Avatar className="h-10 w-10 ring-2 ring-gray-100 dark:ring-gray-700">
                     <AvatarImage src={sale.image || "/placeholder.svg"} alt={sale.name} />
-                    <AvatarFallback>{sale.name[0]}</AvatarFallback>
+                    <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-600 dark:text-gray-300">
+                      {sale.name[0]}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">{sale.name}</p>
-                    <p className="text-sm text-gray-500">Units : {sale.Quantity} {sale.unit}</p>
+                    <p className="text-sm font-medium leading-none dark:text-gray-200">{sale.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Units: {sale.Quantity} {sale.unit}
+                    </p>
                   </div>
-                  <div className="ml-auto font-medium">{sale.amount}</div>
+                  <div className="ml-auto font-medium text-blue-600 dark:text-blue-400">
+                    {sale.amount}
+                  </div>
                 </div>
               ))}
             </div>
