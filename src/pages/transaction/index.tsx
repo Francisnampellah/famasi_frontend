@@ -1,12 +1,15 @@
+"use client";
+
 import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
 import { useTransactions } from './hooks/useTransactions';
 import TransactionTable from './components/TransactionTable';
 import TransactionFilters from './components/TransactionFilters';
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Header from '../../components/layout/header'
 import { formatCurrency } from '../../utils/formatCurrency';
-import StatisticsCard from '../../components/ui/StatisticsCard';
+import { TrendingUp, TrendingDown, AlertTriangle, DollarSign } from 'lucide-react';
+import { Progress } from "@/components/ui/progress";
 
 interface Transaction {
   type: 'SALE' | 'PURCHASE' | 'EXPENSE' | 'FINANCE';
@@ -76,103 +79,110 @@ const TransactionPage: React.FC = () => {
     console.log('View transaction:', transaction);
   };
 
+  // Calculate progress percentages
+  const salesProgress = (summary.sales / (summary.sales + summary.purchases + summary.expenses)) * 100;
+  const purchasesProgress = (summary.purchases / (summary.sales + summary.purchases + summary.expenses)) * 100;
+  const expensesProgress = (summary.expenses / (summary.sales + summary.purchases + summary.expenses)) * 100;
+
   return (
     <DashboardLayout>
       <Header Title='Cash Flow' date={date} setDate={setDate}/>
-      <div className="container mx-2 py-4 space-y-6">
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatisticsCard
-            title="Total Sales"
-            value={formatCurrency(summary.sales)}
-            percentage="+20.1% from last week"
-            percentageColor="text-black"
-            chartData={[
-              { name: 'Mon', value: 2000 },
-              { name: 'Tue', value: 2200 },
-              { name: 'Wed', value: 2100 },
-              { name: 'Thu', value: 2050 },
-              { name: 'Fri', value: 2150 },
-              { name: 'Sat', value: 2500 },
-              { name: 'Sun', value: 3200 },
-            ]}
-            chartType="line"
-            chartColor="#000"
-            valueColor="text-black"
-          />
-          <StatisticsCard
-            title="Total Purchases"
-            value={formatCurrency(summary.purchases)}
-            percentage="+10.5% from last week"
-            percentageColor="text-black"
-            chartData={[
-              { name: 'Mon', value: 800 },
-              { name: 'Tue', value: 900 },
-              { name: 'Wed', value: 850 },
-              { name: 'Thu', value: 950 },
-              { name: 'Fri', value: 1000 },
-              { name: 'Sat', value: 1100 },
-              { name: 'Sun', value: 1200 },
-            ]}
-            chartType="bar"
-            chartColor="#000"
-            valueColor="text-black"
-          />
-          <StatisticsCard
-            title="Total Expenses"
-            value={formatCurrency(summary.expenses)}
-            percentage="+5.2% from last week"
-            percentageColor="text-black"
-            chartData={[
-              { name: 'Mon', value: 400 },
-              { name: 'Tue', value: 420 },
-              { name: 'Wed', value: 410 },
-              { name: 'Thu', value: 430 },
-              { name: 'Fri', value: 450 },
-              { name: 'Sat', value: 470 },
-              { name: 'Sun', value: 500 },
-            ]}
-            chartType="bar"
-            chartColor="#000"
-            valueColor="text-black"
-          />
-          <StatisticsCard
-            title="Total Finance"
-            value={formatCurrency(summary.finance)}
-            percentage="+8.3% from last week"
-            percentageColor="text-black"
-            chartData={[
-              { name: 'Mon', value: 600 },
-              { name: 'Tue', value: 650 },
-              { name: 'Wed', value: 620 },
-              { name: 'Thu', value: 700 },
-              { name: 'Fri', value: 750 },
-              { name: 'Sat', value: 800 },
-              { name: 'Sun', value: 900 },
-            ]}
-            chartType="line"
-            chartColor="#000"
-            valueColor="text-black"
-          />
+      <div className="container mx-auto py-6 space-y-6">
+        {/* Summary Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Sales Card */}
+          <Card className="border-green-200 dark:border-green-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium flex items-center space-x-2">
+                <TrendingUp className="h-4 w-4 text-green-500" />
+                <span>Total Sales</span>
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-500">{formatCurrency(summary.sales)}</div>
+              <Progress value={salesProgress} className="h-2 mt-2 bg-green-100 dark:bg-green-900" />
+              <p className="text-xs text-muted-foreground mt-2">
+                <span className="text-green-500 font-medium">+20.1%</span> from last week
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Purchases Card */}
+          <Card className="border-yellow-200 dark:border-yellow-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium flex items-center space-x-2">
+                <TrendingDown className="h-4 w-4 text-yellow-500" />
+                <span>Total Purchases</span>
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-yellow-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-yellow-500">{formatCurrency(summary.purchases)}</div>
+              <Progress value={purchasesProgress} className="h-2 mt-2 bg-yellow-100 dark:bg-yellow-900" />
+              <p className="text-xs text-muted-foreground mt-2">
+                <span className="text-yellow-500 font-medium">+10.5%</span> from last week
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Expenses Card */}
+          <Card className="border-red-200 dark:border-red-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium flex items-center space-x-2">
+                <AlertTriangle className="h-4 w-4 text-red-500" />
+                <span>Total Expenses</span>
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-red-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-500">{formatCurrency(summary.expenses)}</div>
+              <Progress value={expensesProgress} className="h-2 mt-2 bg-red-100 dark:bg-red-900" />
+              <p className="text-xs text-muted-foreground mt-2">
+                <span className="text-red-500 font-medium">+5.2%</span> from last week
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Profit and Cash Summary */}
-        <div className="flex flex-col md:flex-row gap-6 items-center justify-between px-2 mt-4">
-          <div className="flex-1 flex flex-col items-center bg-white border border-black/10 rounded-lg py-4 shadow-sm">
-            <span className="text-xs font-semibold uppercase tracking-wide text-black/70 mb-1">Net Profit</span>
-            <span className="text-4xl font-extrabold text-black leading-tight">{formatCurrency(summary.netProfit)}</span>
-          </div>
-          <div className="hidden md:block h-12 w-px bg-black/10 mx-4" />
-          <div className="flex-1 flex flex-col items-center bg-white border border-black/10 rounded-lg py-4 shadow-sm">
-            <span className="text-xs font-semibold uppercase tracking-wide text-black/70 mb-1">Remaining Cash</span>
-            <span className="text-4xl font-extrabold text-black leading-tight">{formatCurrency(summary.remainingCash)}</span>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="border-green-200 dark:border-green-800">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium flex items-center space-x-2">
+                <TrendingUp className="h-4 w-4 text-green-500" />
+                <span>Net Profit</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-500">{formatCurrency(summary.netProfit)}</div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Calculated from total sales minus purchases and expenses
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-blue-200 dark:border-blue-800">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium flex items-center space-x-2">
+                <DollarSign className="h-4 w-4 text-blue-500" />
+                <span>Remaining Cash</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-500">{formatCurrency(summary.remainingCash)}</div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Available cash after all transactions
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Transactions Table */}
         <Card>
           <CardHeader>
             <CardTitle>Transactions</CardTitle>
+            <CardDescription>View and manage your transaction history</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

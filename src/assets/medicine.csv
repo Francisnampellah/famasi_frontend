@@ -1,0 +1,51 @@
+Name,Manufacturer (ID or Name),Category (ID or Name),Unit (ID or Name),Sell Price,Quantity,Dosage
+Aspirin,Bayer,Pain Relief,Tablet,5.99,0,500mg
+Ibuprofen,Advil,Pain Relief,Tablet,7.50,0,200mg
+Paracetamol,Tylenol,Pain Relief,Tablet,4.25,0,500mg
+Amoxicillin,GlaxoSmithKline,Antibiotic,Capsule,12.00,0,250mg
+Ciprofloxacin,Pfizer,Antibiotic,Tablet,15.75,0,500mg
+Metformin,Bristol-Myers Squibb,Diabetes,Tablet,9.20,0,500mg
+Insulin,Novo Nordisk,Diabetes,Vial,25.00,0,100 units/ml
+Lisinopril,Merck,Blood Pressure,Tablet,8.10,0,10mg
+Amlodipine,Novartis,Blood Pressure,Tablet,6.80,0,5mg
+Simvastatin,Zocor,Cholesterol,Tablet,10.50,0,20mg
+Atorvastatin,Lipitor,Cholesterol,Tablet,11.20,0,10mg
+Omeprazole,Prilosec,Antacid,Capsule,6.50,0,20mg
+Ranitidine,Zantac,Antacid,Tablet,5.10,0,150mg
+Loratadine,Claritin,Antihistamine,Tablet,7.00,0,10mg
+Cetirizine,Zyrtec,Antihistamine,Tablet,6.20,0,10mg
+Prednisone,Deltasone,Corticosteroid,Tablet,9.80,0,5mg
+Dexamethasone,Decadron,Corticosteroid,Tablet,8.90,0,0.5mg
+Albuterol,Ventolin,Asthma,Inhaler,18.00,0,90mcg/puff
+Salbutamol,ProAir,Asthma,Inhaler,17.50,0,100mcg/puff
+Fluoxetine,Prozac,Antidepressant,Capsule,14.00,0,20mg
+Sertraline,Zoloft,Antidepressant,Tablet,13.50,0,50mg
+Diazepam,Valium,Anxiety,Tablet,7.80,0,5mg
+Alprazolam,Xanax,Anxiety,Tablet,8.50,0,0.5mg
+Warfarin,Coumadin,Anticoagulant,Tablet,11.00,0,5mg
+Clopidogrel,Plavix,Anticoagulant,Tablet,16.20,0,75mg
+Levothyroxine,Synthroid,Thyroid,Tablet,9.00,0,50mcg
+Furosemide,Lasix,Diuretic,Tablet,6.00,0,20mg
+Hydrochlorothiazide,Esidrix,Diuretic,Tablet,5.50,0,25mg
+Gabapentin,Neurontin,Anticonvulsant,Capsule,10.00,0,300mg
+Pregabalin,Lyrica,Anticonvulsant,Capsule,12.50,0,75mg
+Tramadol,Ultram,Pain Relief,Tablet,9.50,0,50mg
+Codeine,Tylenol with Codeine,Pain Relief,Tablet,8.00,0,30mg
+Doxycycline,Vibramycin,Antibiotic,Capsule,13.00,0,100mg
+Azithromycin,Zithromax,Antibiotic,Tablet,14.50,0,250mg
+Montelukast,Singulair,Asthma,Tablet,10.80,0,10mg
+Diphenhydramine,Benadryl,Antihistamine,Tablet,4.80,0,25mg
+Metronidazole,Flagyl,Antibiotic,Tablet,11.50,0,500mg
+Cefalexin,Keflex,Antibiotic,Capsule,10.20,0,250mg
+Naproxen,Aleve,Pain Relief,Tablet,6.70,0,220mg
+Diclofenac,Voltaren,Pain Relief,Tablet,7.20,0,50mg
+Meloxicam,Mobic,Pain Relief,Tablet,8.40,0,7.5mg
+Prednisolone,Orapred,Corticosteroid,Solution,9.90,0,15mg/5ml
+Hydrocortisone,Cortef,Corticosteroid,Cream,7.00,0,1%
+Miconazole,Monistat,Antifungal,Cream,6.30,0,2%
+Clotrimazole,Lotrimin,Antifungal,Cream,5.80,0,1%
+Terbinafine,Lamisil,Antifungal,Cream,7.60,0,1%
+Acyclovir,Zovirax,Antiviral,Tablet,15.00,0,200mg
+Valacyclovir,Valtrex,Antiviral,Tablet,17.00,0,500mg
+Oseltamivir,Tamiflu,Antiviral,Capsule,20.00,0,75mg
+Zolpidem,Ambien,Insomnia,Tablet,11.80,0,10mg
