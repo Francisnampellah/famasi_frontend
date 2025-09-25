@@ -15,33 +15,27 @@ export const addMedicine = async (medicine: any): Promise<Medicine> => {
   return response.data
 }
 
-export const updateStock = async ({ medicineId, quantity, pricePerUnit, batchId }: any): Promise<Medicine> => {
-  const response = await axiosInstance.patch<Medicine>(`/stock/${medicineId}`, {
-    quantity,
-    pricePerUnit,
-    batchId,
-  })
-  return response.data
-}
+// updateStock is now exported from stockService
 
-export const getMedicineTemplate = async (): Promise<Blob> => {
-  const response = await axiosInstance.get('/excel/medicine', {
-    responseType: 'blob'
-  });
-  return response.data;
-}
-
-export const bulkUploadMedicines = async (file: File): Promise<void> => {
-  const formData = new FormData();
-  formData.append('file', file);
-  await axiosInstance.post('/excel/bulk-upload/medicine', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-}
+// getMedicineTemplate and bulkUploadMedicines are now exported from bulkService
 
 export const updateMedicine = async (id: number, medicine: any): Promise<Medicine> => {
   const response = await axiosInstance.put<Medicine>(`/medicine/${id}`, medicine)
   return response.data
 }
+
+// Re-export bulk operations from bulkService for backward compatibility
+export {
+  getBulkMedicineWithStockTemplate,
+  bulkUploadMedicinesWithStock,
+  getMedicineTemplate,
+  bulkUploadMedicines,
+  getStockUpdateTemplate,
+  downloadTemplate,
+  formatBulkUploadResults,
+  type BulkUploadResult,
+  type BulkUploadError
+} from './bulkService';
+
+// Re-export all stock operations
+export * from './stockService';

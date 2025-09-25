@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { SummaryCards } from "./components/SummaryCards"
 import { InventoryTable } from "./components/InventoryTable"
+import { InventoryActions } from "./components/InventoryActions"
 import { useInventory } from "./hooks/useInventory"
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { ViewMedicineDialog } from "./components/ViewMedicineDialog"
@@ -40,6 +41,7 @@ export default function InventoryPage() {
     setUpdateStockDialogOpen,
     selectedMedicine,
     setSelectedMedicine,
+    refetch,
   } = useInventory()
 
   const [viewDialogOpen, setViewDialogOpen] = useState(false)
@@ -58,23 +60,30 @@ export default function InventoryPage() {
   return (
     <DashboardLayout>
       <Header Title='Inventory Management' date={date} setDate={setDate} />
-      <div className="">
-          <InventoryTable
-            handleAddMedicine={handleAddMedicine}
-            medicines={medicines}
-            isLoading={isLoading}
-            onDelete={handleDelete}
-            onUpdateStock={openUpdateStockDialog}
+      <div className="space-y-6">
+        {/* Optional: Show actions section */}
+        <InventoryActions 
+          onRefresh={refetch}
+          onAddMedicineOnly={handleAddMedicine}
+        />
+        
+        <InventoryTable
+          handleAddMedicine={handleAddMedicine}
+          medicines={medicines}
+          isLoading={isLoading}
+          onDelete={handleDelete}
+          onUpdateStock={openUpdateStockDialog}
           onView={(medicine) => {
             setSelectedMedicine(medicine)
             setViewDialogOpen(true)
           }}
           onEdit={handleEditMedicine}
-            isDeleting={isDeleting}
-            deletingId={deletingId}
-          />
+          isDeleting={isDeleting}
+          deletingId={deletingId}
+          onRefresh={refetch}
+        />
 
-      <AddMedicineDialog
+        <AddMedicineDialog
           open={addDialogOpen}
           onOpenChange={(open) => {
             setAddDialogOpen(open)
@@ -95,7 +104,7 @@ export default function InventoryPage() {
           onOpenChange={setViewDialogOpen}
           medicine={selectedMedicine}
         />
-    </div>
+      </div>
     </DashboardLayout>
   )
 } 

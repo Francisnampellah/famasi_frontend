@@ -24,21 +24,11 @@ export const adjustStock = async (medicineId: number, adjustment: number) => {
   return response.data;
 };
 
-export const getStockUpdateTemplate = async (): Promise<Blob> => {
-  const response = await axiosInstance.get('/excel-stock/stock', {
-    responseType: 'blob'
-  });
-  return response.data;
-};
-
-export const bulkUpdateStock = async (formData: FormData) => {
-  const response = await axiosInstance.post('/excel-stock/bulk-upload/stock', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return response.data;
-};
+// Re-export stock-specific bulk operations from bulkService
+export {
+  getStockUpdateTemplate,
+  bulkUpdateStock
+} from './bulkService';
 
 export const fetchBatches = async () => {
   const response = await axiosInstance.get('/batch');

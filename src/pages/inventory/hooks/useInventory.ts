@@ -16,7 +16,7 @@ export function useInventory() {
   const queryClient = useQueryClient()
   
   // Fetch medicines with Tanstack Query
-  const { data: medicines = [], isLoading, isError, error: queryError } = useQuery({
+  const { data: medicines = [], isLoading, isError, error: queryError, refetch } = useQuery({
     queryKey: ['medicines'],
     queryFn: fetchMedicines,
   })
@@ -180,5 +180,6 @@ export function useInventory() {
     isDeleting: deleteMutation.isPending,
     deletingId: deleteMutation.variables as number,
     bulkUploadMutation,
+    refetch,
   }
 } 

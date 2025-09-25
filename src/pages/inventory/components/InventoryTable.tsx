@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { MoreHorizontal, ArrowUpDown, Pencil, Plus, Trash2, Filter } from 'lucide-react'
+import { MoreHorizontal, ArrowUpDown, Pencil, Plus, Trash2, Filter, Upload, FileUp } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { BulkUploadModal, AddMedicineWithStockForm } from "@/components/inventory"
 
 interface InventoryTableProps {
   medicines: Medicine[]
@@ -44,6 +45,7 @@ interface InventoryTableProps {
   isDeleting?: boolean
   deletingId?: number
   handleAddMedicine: () => void
+  onRefresh?: () => void
 }
 
 export function InventoryTable({
@@ -55,7 +57,8 @@ export function InventoryTable({
   onEdit,
   isDeleting,
   deletingId,
-  handleAddMedicine
+  handleAddMedicine,
+  onRefresh
 }: InventoryTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -203,9 +206,33 @@ export function InventoryTable({
             onChange={(event) => setGlobalFilter(String(event.target.value))}
             className="max-w-sm"
           />
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <AddMedicineWithStockForm 
+            onSuccess={onRefresh}
+            trigger={
+              <Button variant="outline" size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Medicine with Stock
+              </Button>
+            }
+          />
+          
+          <BulkUploadModal 
+            type="medicine-with-stock" 
+            onSuccess={onRefresh}
+            trigger={
+              <Button variant="outline" size="sm">
+                <Upload className="h-4 w-4 mr-2" />
+                Bulk Upload
+              </Button>
+            }
+          />
+          
           <Button variant="outline" size="sm" onClick={handleAddMedicine}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Medicine
+            <FileUp className="h-4 w-4 mr-2" />
+            Add Medicine Only
           </Button>
         </div>
       </div>
